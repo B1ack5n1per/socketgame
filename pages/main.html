@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Socket Game</title>
+  <link rel="stylesheet" href="globalStyles.css">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+  <script src="main.js" charset="utf-8"></script>
+  <header>
+    <span></span>
+    <i class="far fa-edit"></i>
+  </header>
+  <div id="container">
+    <div id="game-stuff">
+      <div id="settings">
+        <div id="owner"><span class="bold">Owner: </span></div>
+        <div id="topic"><span class="bold">Topic: </span><input type="text"></div>
+        <ul id="players"><span class="bold">Players:</span></ul>
+        <button id="start">Start Game</button>
+      </div>
+      <div id="game">
+
+      </div>
+    </div>
+    <div id="chat">
+      <h3 id="chat-title">Chat</h3>
+      <ul id="messages"></ul>
+      <div id="write">
+        <input type="text" id="message" placeholder="Message">
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+:root {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --light: rgb(255, 255, 255);
+  --medium: rgb(247, 247, 247);
+  --dark: rgb(28, 28, 28);
+  --primary: rgb(240, 240, 240);
+  --highlight: rgb(236, 33, 33);
+  --midDark: rgb(227, 227, 227);
+}
+
+body {
+  background: var(--dark);
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.bold {
+  font-weight: bold;
+}

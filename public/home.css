@@ -1,0 +1,95 @@
+/* Setup */
+#username {
+  height: 2rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.5rem;
+}
+
+#username::placeholder {
+  color: rgb(55, 55, 55);
+}
+
+#submit {
+  height: 44px;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.75rem;
+  cursor: pointer;
+}
+
+.error {
+  padding: 1rem;
+  color: var(--highlight);
+  border: 2px solid var(--highlight);
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+/* Spinner */
+.spinner:before{
+  content:"";
+  box-sizing: border-box;
+  position: absolute;
+  top: 10rem;
+  left: 50%;
+  height: 7.5rem;
+  width: 7.5rem;
+  margin-top: -30px;
+  margin-left: -30px;
+  border-radius: 50%;
+  border: 3px solid;
+  border-color: var(--highlight) transparent;
+  animation: spinner 1s ease infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Game List */
+#games-list {
+  list-style: none;
+  background: var(--light);
+  padding: 0;
+}
+
+.room:nth-child(odd) {
+  background: var(--medium);
+}
+
+.room {
+  display: block;
+  padding: 1rem;
+  padding-left: 2rem;
+  cursor: pointer;
+}
+
+.room:hover {
+  background: var(--primary);
+}
+
+.room a {
+  display: block;
+  margin: 0;
+}
+
+.name {
+  font-size: 2.5rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+.room .body{
+  display: flex;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.body p {
+  margin: 0;
+}
+
+.owner {
+  margin-right: 2rem !important;
+}
