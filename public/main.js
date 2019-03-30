@@ -122,4 +122,27 @@ $(document).ready(() => {
       $('header > span').html(data.newName);
     };
   });
+  socket.on('message', (data) => {
+    console.log(data);
+    if (Number(data.room) === roomNum) {
+      roomDetails.messages.push({ user: data.user, msg: data.msg });
+      addMessages();
+    }
+  });
+  $('#message').on('keypress', (event) => {
+    if (event.keyCode === 13) {
+      $('#send').trigger('click');
+    };
+  });
+  $('#send').on('click', () => {
+    let message = $('#message').val();
+    if (message.length > 0) {
+      socket.emit('message',  {
+        user: username,
+        room: roomNum,
+        msg: message,
+      });
+      $('#message').val('');
+    }
+  })
 });

@@ -4,6 +4,10 @@ module.exports = (app, db, io) => {
   io.on('connection', (ioSocket) => {
     console.log('Socket Connected');
     socket = ioSocket;
+    socket.on('message', (data) => {
+      socket.emit('message', data);
+      db.collection('rooms').updateOne({ roomId: data.room }, { $push: { messages: { user: data.user, msg: data.msg }} });
+    });
   });
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../pages/home.html'));
