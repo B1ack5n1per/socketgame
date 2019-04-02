@@ -40,7 +40,7 @@ module.exports = (app, db, io) => {
     let newGame = {
       owner: req.body.owner,
       name: `${req.body.owner}'s Game`,
-      players: 0,
+      players: [],
       topic: req.body.topic,
       roomId: undefined,
       messages: [],
