@@ -5,7 +5,7 @@ module.exports = (app, db, io) => {
     console.log('Socket Connected');
     socket = ioSocket;
     socket.on('message', (data) => {
-      socket.emit('message', data);
+      io.emit('message', data);
       db.collection('rooms').updateOne({ roomId: data.room }, { $push: { messages: { user: data.user, msg: data.msg }} });
     });
   });
