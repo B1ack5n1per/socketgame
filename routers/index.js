@@ -1,4 +1,13 @@
 const path = require('path');
+function Room (owner, name, topic) {
+  this.owner = owner;
+  this.name = name;
+  this.players = [];
+  this.topic = topic;
+  this.roomId = undefined;
+  this.messages = [];
+  this.cards = [];
+}
 let socket;
 module.exports = (app, db, io) => {
   io.on('connection', (ioSocket) => {
@@ -37,14 +46,7 @@ module.exports = (app, db, io) => {
     });
   });
   app.post('/makeGame', (req, res) => {
-    let newGame = {
-      owner: req.body.owner,
-      name: `${req.body.owner}'s Game`,
-      players: [],
-      topic: req.body.topic,
-      roomId: undefined,
-      messages: [],
-    };
+    let newGame = new Room(req.body.owner, `${req.body.owner}'s Game`, req.body.topic);
     db.collection('rooms').find().toArray((err, data) => {
       let rooms = data;
       let ordered = true;

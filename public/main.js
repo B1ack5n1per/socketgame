@@ -8,10 +8,14 @@ function makePlayer(name) {
   return '<li class="player">' + name + '</li>';
 }
 
+function MakeCard (word, meaning) {
+  this.word = word;
+  this.meaning = meaning;
+}
+
 function addPlayers(array) {
   $('.player').remove();
   for (i = 0; i < array.length; i++) {
-    console.log(array[i].name);
     $('#players').append(makePlayer(array[i].name));
   }
 }
@@ -88,8 +92,9 @@ $(document).ready(() => {
       success: (data) => {
 
       },
-    })
+    });
   });
+
   window.onbeforeunload = function () {
     $.ajax({
       type: 'post',
@@ -127,6 +132,25 @@ $(document).ready(() => {
     if (Number(data.room) === roomNum) {
       roomDetails.messages.push({ user: data.user, msg: data.msg });
       addMessages();
+    }
+  });
+
+  $('#make-card').on('click', () => {
+    $('.popup').fadeIn('fast');
+  });
+  $('.popup').on('click', (event) => {
+    if (event.target === event.currentTarget) {
+      $('.popup').fadeOut('fast');
+    }
+  });
+  $('.card-content > textarea').on('focus', (event) => {
+    $(event.currentTarget).attr('placeholder', '');
+  });
+  $('.card-content > textarea').on('blur', (event) => {
+    if (event.currentTarget.id == 'side-a') {
+      $(event.currentTarget).attr('placeholder', 'Side A');
+    } else {
+      $(event.currentTarget).attr('placeholder', 'Side B');
     }
   });
   $('#message').on('keypress', (event) => {

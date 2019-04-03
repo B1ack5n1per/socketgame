@@ -19,6 +19,20 @@
     <span></span>
     <i class="far fa-edit"></i>
   </header>
+
+  <div class="popup" style="display:none;">
+    <div class="card-setup">
+      <center>
+        <h1>Create a Card</h1>
+        <div class="card-content">
+          <textarea rows="8" cols="80" id="side-a" placeholder="Side A"></textarea>
+          <textarea rows="8" cols="80" id="side-b" placeholder="Side B"></textarea>
+        </div>
+        <button id="create-card">Create</button>
+      </center>
+    </div>
+  </div>
+
   <div id="container">
     <div id="game-stuff">
       <div id="settings">
@@ -26,6 +40,10 @@
         <div id="topic"><span class="bold">Topic: </span><input type="text"></div>
         <ul id="players"><span class="bold">Players:</span></ul>
         <button id="start">Start Game</button>
+        <button id="make-card">Make Card</button>
+      </div>
+      <div class="cards">
+        <ul></ul>
       </div>
       <div id="game">
 

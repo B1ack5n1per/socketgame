@@ -3,6 +3,10 @@ body {
   margin: 0;
 }
 
+ul {
+  list-style: none;
+}
+
 header {
   height: 4rem;
   padding: 1rem 2rem;
@@ -18,6 +22,91 @@ header i {
 
 header i:hover {
   color: var(--highlight);
+}
+
+.popup {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.97);
+}
+
+.card-setup {
+  position: absolute;
+  top: 12.5%;
+  left: 20%;
+  height: auto;
+  width: 60%;
+  filter: opacity(100%);
+  background: var(--light);
+  padding: 2rem;
+  align-content: center;
+}
+
+.card-content {
+  height: auto;
+  width: auto;
+  border: 2px solid var(--dark);
+  display: flex;
+  flex-direction: row;
+}
+
+.card-content textarea {
+  display: block;
+  width: calc(50% - 4px);
+  height: 14.5rem;
+  border: 2px solid var(--dark);
+  text-align: center;
+  font-size: 2rem;
+  resize: none;
+  padding: 0.5rem;
+}
+
+.card-content textarea::placeholder {
+  line-height: 10rem;
+}
+
+.card-content textarea:focus {
+  outline: none;
+}
+
+@media (max-width: 720px) {
+  .card-content {
+    flex-direction: column;
+    width: auto;
+    border:none;
+  }
+
+  #side-a {
+    border: 4px solid var(--dark);
+    border-bottom: 2px solid var(--dark);
+  }
+
+  #side-b {
+    border: 4px solid var(--dark);
+    border-top: 2px solid var(--dark);
+  }
+}
+
+#create-card {
+  background: var(--medium);
+  border: 2px solid var(--dark);
+  border-radius: 1rem;
+  color: var(--dark);
+  font-size: 2rem;
+  width: 10rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+#create-card:hover {
+  filter: brightness(75%);
+}
+
+#create-card:focus {
+  outline: none;
 }
 
 #container {
