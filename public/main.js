@@ -54,6 +54,9 @@ $(document).ready(() => {
           $('#owner').append(roomDetails.owner);
           $('#topic > input').val(roomDetails.topic);
           addMessages();
+          for (ii = 0; ii < roomDetails.cards.length; ii++) {
+            $('.cards').append(`<div class="card"><div class="side-a">${roomDetails.cards[ii].sideA}</div><div class="side-b">${roomDetails.cards[ii].sideB}</div></div>`);
+          }
         }
       });
     }
@@ -94,6 +97,48 @@ $(document).ready(() => {
       },
     });
   });
+  $('#make-card').on('click', () => {
+    $('.popup').fadeIn('fast');
+  });
+  $('.popup').on('click', (event) => {
+    if (event.target === event.currentTarget) {
+      $('.popup').fadeOut('fast');
+    }
+  });
+  $('.card-content > textarea').on('focus', (event) => {
+    $(event.currentTarget).attr('placeholder', '');
+  });
+  $('.card-content > textarea').on('blur', (event) => {
+    if (event.currentTarget.id == 'side-a') {
+      $(event.currentTarget).attr('placeholder', 'Side A');
+    } else {
+      $(event.currentTarget).attr('placeholder', 'Side B');
+    }
+  });
+  $('#create-card').on('click', () => {
+    socket.emit('card', {
+      sideA: $('#side-a').val(),
+      sideB: $('#side-b').val(),
+      room: roomNum,
+    });
+    $('.popup').trigger('click');
+  })
+  $('#message').on('keypress', (event) => {
+    if (event.keyCode === 13) {
+      $('#send').trigger('click');
+    };
+  });
+  $('#send').on('click', () => {
+    let message = $('#message').val();
+    if (message.length > 0) {
+      socket.emit('message',  {
+        user: username,
+        room: roomNum,
+        msg: message,
+      });
+      $('#message').val('');
+    }
+  })
 
   window.onbeforeunload = function () {
     $.ajax({
@@ -111,6 +156,7 @@ $(document).ready(() => {
       }
     })
   };
+
   socket.on('change topic', (data) => {
     console.log(data)
     if (Number(data.room) == roomNum) {
@@ -134,39 +180,14 @@ $(document).ready(() => {
       addMessages();
     }
   });
-
-  $('#make-card').on('click', () => {
-    $('.popup').fadeIn('fast');
-  });
-  $('.popup').on('click', (event) => {
-    if (event.target === event.currentTarget) {
-      $('.popup').fadeOut('fast');
-    }
-  });
-  $('.card-content > textarea').on('focus', (event) => {
-    $(event.currentTarget).attr('placeholder', '');
-  });
-  $('.card-content > textarea').on('blur', (event) => {
-    if (event.currentTarget.id == 'side-a') {
-      $(event.currentTarget).attr('placeholder', 'Side A');
-    } else {
-      $(event.currentTarget).attr('placeholder', 'Side B');
-    }
-  });
-  $('#message').on('keypress', (event) => {
-    if (event.keyCode === 13) {
-      $('#send').trigger('click');
+  socket.on('card', (data) => {
+    if (data.room == roomNum) {
+      roomDetails.cards.push({
+        sideA: data.sideA,
+        sideB: data.sideB,
+      });
+      $('.cards').append(`<div class="card"><div class="side-a">${data.sideA}</div><div class="side-b">${data.sideB}</div></div>`);
     };
   });
-  $('#send').on('click', () => {
-    let message = $('#message').val();
-    if (message.length > 0) {
-      socket.emit('message',  {
-        user: username,
-        room: roomNum,
-        msg: message,
-      });
-      $('#message').val('');
-    }
-  })
+
 });

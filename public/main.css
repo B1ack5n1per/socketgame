@@ -66,6 +66,7 @@ header i:hover {
 
 .card-content textarea::placeholder {
   line-height: 10rem;
+  font-size: 3rem;
 }
 
 .card-content textarea:focus {

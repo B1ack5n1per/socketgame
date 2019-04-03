@@ -17,6 +17,16 @@ module.exports = (app, db, io) => {
       io.emit('message', data);
       db.collection('rooms').updateOne({ roomId: data.room }, { $push: { messages: { user: data.user, msg: data.msg }} });
     });
+    socket.on('card', (data) => {
+      db.collection('rooms').updateOne({ roomId: data.room }, { $push: { cards: { sideA: data.sideA, sideB: data.sideB } } }, (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log(data);
+          io.emit('card', data);
+        }
+      } );
+    });
   });
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../pages/home.html'));
