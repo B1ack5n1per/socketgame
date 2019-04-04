@@ -55,7 +55,7 @@ $(document).ready(() => {
           $('#topic > input').val(roomDetails.topic);
           addMessages();
           for (ii = 0; ii < roomDetails.cards.length; ii++) {
-            $('.cards').append(`<div class="card"><div class="side-a">${roomDetails.cards[ii].sideA}</div><div class="side-b">${roomDetails.cards[ii].sideB}</div></div>`);
+            $('.cards').append(`<div class="card"><textarea readonly class="side-a">${roomDetails.cards[ii].sideA}</textarea><textarea readonly class="side-b">${roomDetails.cards[ii].sideB}</textarea><i class="fas fa-ellipsis-v"></i></div>`);
           }
         }
       });
@@ -186,7 +186,7 @@ $(document).ready(() => {
         sideA: data.sideA,
         sideB: data.sideB,
       });
-      $('.cards').append(`<div class="card"><div class="side-a">${data.sideA}</div><div class="side-b">${data.sideB}</div></div>`);
+      $('.cards').append(`<div class="card"><textarea readonly class="side-a">${data.sideA}</textarea><textarea readonly class="side-b">${data.sideB}</textarea><i class="fas fa-ellipsis-v"></i></div>`);
     };
   });
 

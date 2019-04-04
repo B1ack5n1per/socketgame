@@ -7,6 +7,10 @@ ul {
   list-style: none;
 }
 
+textarea {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+}
+
 header {
   height: 4rem;
   padding: 1rem 2rem;
@@ -28,6 +32,7 @@ header i:hover {
   position: absolute;
   height: 100%;
   width: 100%;
+  z-index: 3;
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.97);
@@ -167,6 +172,79 @@ header i:hover {
 #game-stuff {
   width: calc(66% - 0.5rem);
   min-width: 50%;
+}
+
+.cards {
+  margin-top: 1rem;
+  background: var(--light);
+  height: auto;
+  width: auto;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+}
+
+@media (max-width: 1615px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1225px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 890px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid var(--dark);
+  border-radius: 5px;
+  width: 15rem;
+  height: 7rem;
+  justify-content: flex-end;
+}
+
+.card textarea {
+  padding: 1rem;
+  width: 5rem;
+  height: 5rem;
+  text-align: center;
+  resize: none;
+  border: none;
+  cursor: default;
+}
+
+.card textarea:focus {
+  outline: none;
+}
+
+.side-a {
+  border-right: 2px solid var(--dark) !important;
+}
+
+.side-b {
+
+}
+
+.card i {
+  position: relative;
+  z-index: 2;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+}
+
+.card i:hover {
+  color: var(--highlight);
 }
 
 #chat {
