@@ -44,11 +44,20 @@
           <button id="make-card">Make Card</button>
         </div>
         <div id="game-details">
-          <input type="number" id="rounds" placeholder="Rounds">
-          <input type="number" id="time" placeholder="Time per Round">
+          <p>
+            Rounds:
+            <input type="number" id="rounds" min="1" max="5" step="1">
+          </p>
+          <p>
+            Time:
+            <input type="number" id="time"min="30" max="120" step="10">
+          </p>
         </div>
       </div>
-      <div class="cards"></div>
+      <div class="card-container">
+        <h3>Cards:</h3>
+        <div class="cards"></div>
+      </div>
           <div id="chat">
             <h3 id="chat-title">Chat</h3>
             <ul id="messages"></ul>

@@ -21,7 +21,26 @@ $(document).ready(() => {
       $('.spinner').fadeOut('fast');
       let rooms = data;
       for (let i = 0; i < rooms.length; i++) {
-        let room = `<li class="room" id="${rooms[i].roomId}"><h2 class="name">${rooms[i].name}</h2><div class="body"><p class="owner"><span class="bold">Owner:</span> ${rooms[i].owner}</p><p class="topic"><span class="bold">Topic:</span> ${rooms[i].topic}</p></div></li>`
+        let players = 'Players: ';
+        for (ii = 0; ii < rooms[i].players.length; ii++) {
+          players += rooms[i].players[ii].name + ', ';
+        }
+        let room = `
+          <li class="room" id="${rooms[i].roomId}">
+            <h2 class="name">${rooms[i].name}</h2>
+            <div class="body">
+              <p class="players">${players}</p>
+              <p class="topic">
+                <span class="bold">Topic:</span>
+                ${rooms[i].topic}
+              </p>
+              <p class="owner">
+                <span class="bold">Owner:</span>
+                ${rooms[i].owner}
+              </p>
+
+            </div>
+          </li>`;
         $('#games-list').append(room);
       };
       $('#games-list > li').on('click', (event) => {

@@ -7,6 +7,10 @@ function Room (owner, name, topic) {
   this.roomId = undefined;
   this.messages = [];
   this.cards = [];
+  this.settings = {
+    time: 30,
+    rounds: 1,
+  }
 }
 let socket;
 module.exports = (app, db, io) => {
@@ -39,7 +43,6 @@ module.exports = (app, db, io) => {
               if (err) {
                 throw err;
               } else {
-                console.log(data);
                 io.emit('card', data);
               };
             });
@@ -57,6 +60,11 @@ module.exports = (app, db, io) => {
         };
       });
     });
+    socket.on('change settings', (data) => {
+      db.collection('rooms').updateOne({ roomId: data.room }, { $set: { settings: data.settings } }, (err, result) => {
+        io.emit('change settings', data);
+      })
+    })
   });
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../pages/home.html'));

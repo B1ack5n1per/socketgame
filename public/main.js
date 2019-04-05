@@ -7,7 +7,6 @@ let socket = io();
 function makePlayer(name) {
   return '<li class="player">' + name + '</li>';
 }
-
 function removeElement(arr, query) {
   let temp = []
   for (i = 0; i < arr.length; i++) {
@@ -17,19 +16,16 @@ function removeElement(arr, query) {
   };
   return temp;
 };
-
 function MakeCard (word, meaning) {
   this.word = word;
   this.meaning = meaning;
 }
-
 function addPlayers(array) {
   $('.player').remove();
   for (i = 0; i < array.length; i++) {
     $('#players').append(makePlayer(array[i].name));
   }
 }
-
 function addMessages() {
   $('.message').remove();
   for (i = 0; i < roomDetails.messages.length; i++) {
@@ -63,6 +59,8 @@ $(document).ready(() => {
           $('header > span').html(roomDetails.name);
           $('#owner').append(roomDetails.owner);
           $('#topic > input').val(roomDetails.topic);
+          $('#time').val(roomDetails.settings.time);
+          $('#rounds').val(roomDetails.settings.rounds);
           addMessages();
           for (ii = 0; ii < roomDetails.cards.length; ii++) {
             $('.cards').append(`
@@ -118,6 +116,7 @@ $(document).ready(() => {
   $('.popup').on('click', (event) => {
     if (event.target === event.currentTarget) {
       $('.popup').fadeOut('fast');
+      $('.card-content > textarea').val('');
     }
   });
   $('.card-content > textarea').on('focus', (event) => {
@@ -136,7 +135,6 @@ $(document).ready(() => {
       sideB: $('#side-b').val(),
       room: roomNum,
     });
-    $('.card-content > textarea').val('');
     $('.popup').trigger('click');
   })
   $('#message').on('keypress', (event) => {
@@ -162,6 +160,15 @@ $(document).ready(() => {
     }
     socket.emit('removeCard', { room: roomNum, card: query });
   });
+  $('#game-details > p > input').on('change', () => {
+    socket.emit('change settings', {
+      room: roomNum,
+      settings: {
+        time: $('#time').val(),
+        rounds: $('#rounds').val(),
+      },
+    })
+  })
 
   window.onbeforeunload = function () {
     $.ajax({
@@ -235,6 +242,12 @@ $(document).ready(() => {
   socket.on('error', (data) => {
     if (data.room == roomNum) {
       alert(data.error);
+    }
+  });
+  socket.on('change settings', (data) => {
+    if (data.room == roomNum) {
+      $('#time').val(data.settings.time);
+      $('#rounds').val(data.settings.rounds);
     }
   });
 });
