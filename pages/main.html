@@ -36,23 +36,29 @@
   <div id="container">
     <div id="game-stuff">
       <div id="settings">
-        <div id="owner"><span class="bold">Owner: </span></div>
-        <div id="topic"><span class="bold">Topic: </span><input type="text"></div>
-        <ul id="players"><span class="bold">Players:</span></ul>
-        <button id="start">Start Game</button>
-        <button id="make-card">Make Card</button>
+        <div id="setup">
+          <div id="owner"><span class="bold">Owner: </span></div>
+          <div id="topic"><span class="bold">Topic: </span><input type="text"></div>
+          <ul id="players"><span class="bold">Players:</span></ul>
+          <button id="start">Start Game</button>
+          <button id="make-card">Make Card</button>
+        </div>
+        <div id="game-details">
+          <input type="number" id="rounds" placeholder="Rounds">
+          <input type="number" id="time" placeholder="Time per Round">
+        </div>
       </div>
       <div class="cards"></div>
+          <div id="chat">
+            <h3 id="chat-title">Chat</h3>
+            <ul id="messages"></ul>
+            <div id="write">
+              <input type="text" id="message" placeholder="Message">
+              <button id="send">Send</button>
+            </div>
+          </div>
+    </div>
 
-    </div>
-    <div id="chat">
-      <h3 id="chat-title">Chat</h3>
-      <ul id="messages"></ul>
-      <div id="write">
-        <input type="text" id="message" placeholder="Message">
-        <button id="send">Send</button>
-      </div>
-    </div>
     <div id="game"></div>
   </div>
 </body>

@@ -8,6 +8,16 @@ function makePlayer(name) {
   return '<li class="player">' + name + '</li>';
 }
 
+function removeElement(arr, query) {
+  let temp = []
+  for (i = 0; i < arr.length; i++) {
+    if (!(arr[i].sideA == query.sideA && arr[i].sideB == query.sideB)) {
+      temp.push(arr[i]);
+    };
+  };
+  return temp;
+};
+
 function MakeCard (word, meaning) {
   this.word = word;
   this.meaning = meaning;
@@ -55,7 +65,12 @@ $(document).ready(() => {
           $('#topic > input').val(roomDetails.topic);
           addMessages();
           for (ii = 0; ii < roomDetails.cards.length; ii++) {
-            $('.cards').append(`<div class="card"><textarea readonly class="side-a">${roomDetails.cards[ii].sideA}</textarea><textarea readonly class="side-b">${roomDetails.cards[ii].sideB}</textarea><i class="fas fa-ellipsis-v"></i></div>`);
+            $('.cards').append(`
+            <div class="card">
+              <textarea readonly class="side-a">${roomDetails.cards[ii].sideA}</textarea>
+              <textarea readonly class="side-b">${roomDetails.cards[ii].sideB}</textarea>
+              <i class="remove far fa-times-circle"></i>
+            </div>`);
           }
         }
       });
@@ -121,6 +136,7 @@ $(document).ready(() => {
       sideB: $('#side-b').val(),
       room: roomNum,
     });
+    $('.card-content > textarea').val('');
     $('.popup').trigger('click');
   })
   $('#message').on('keypress', (event) => {
@@ -138,7 +154,14 @@ $(document).ready(() => {
       });
       $('#message').val('');
     }
-  })
+  });
+  $('.cards').on('click', 'div > i.remove', (event) => {
+    let query = {
+      sideA: event.currentTarget.parentElement.children[0].innerHTML,
+      sideB: event.currentTarget.parentElement.children[1].innerHTML,
+    }
+    socket.emit('removeCard', { room: roomNum, card: query });
+  });
 
   window.onbeforeunload = function () {
     $.ajax({
@@ -186,8 +209,32 @@ $(document).ready(() => {
         sideA: data.sideA,
         sideB: data.sideB,
       });
-      $('.cards').append(`<div class="card"><textarea readonly class="side-a">${data.sideA}</textarea><textarea readonly class="side-b">${data.sideB}</textarea><i class="fas fa-ellipsis-v"></i></div>`);
-    };
+      $('.cards').append(
+        `<div class="card">
+          <textarea readonly class="side-a">${data.sideA}</textarea>
+          <textarea readonly class="side-b">${data.sideB}</textarea>
+          <i class="remove far fa-times-circle"></i>
+        </div>`
+      );
+    }
   });
-
+  socket.on('removeCard', (data) => {
+    if (roomNum == data.room) {
+      roomDetails.cards = removeElement(roomDetails.cards, data.card);
+      $('.card').remove();
+      for (i = 0; i < roomDetails.cards.length; i++) {
+        $('.cards').append(`
+        <div class="card">
+          <textarea readonly class="side-a">${roomDetails.cards[i].sideA}</textarea>
+          <textarea readonly class="side-b">${roomDetails.cards[i].sideB}</textarea>
+          <i class="remove far fa-times-circle"></i>
+        </div>`);
+      }
+    }
+  });
+  socket.on('error', (data) => {
+    if (data.room == roomNum) {
+      alert(data.error);
+    }
+  });
 });

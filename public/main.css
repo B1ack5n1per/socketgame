@@ -120,10 +120,30 @@ header i:hover {
   display: flex;
 }
 
+#game-stuff {
+  width: 100%;
+  height: 90%;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "settings chat" "cards chat";
+}
+
 /* settings */
 #settings {
   background: var(--light);
+  grid-area: settings;
   padding: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+#game-details input {
+  border: none;
+}
+
+#game-details input:focus {
+  outline: none;
 }
 
 #owner {
@@ -169,11 +189,6 @@ header i:hover {
   background: var(--midDark);
 }
 
-#game-stuff {
-  width: calc(66% - 0.5rem);
-  min-width: 50%;
-}
-
 .cards {
   margin-top: 1rem;
   background: var(--light);
@@ -183,6 +198,7 @@ header i:hover {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
+  grid-area: cards;
 }
 
 @media (max-width: 1615px) {
@@ -191,7 +207,7 @@ header i:hover {
   }
 }
 
-@media (max-width: 1225px) {
+@media (max-width: 1275px) {
   .cards {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -232,27 +248,29 @@ header i:hover {
 }
 
 .side-b {
-
+  padding-right: 0.5rem !important;
 }
 
-.card i {
+.remove {
   position: relative;
   z-index: 2;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.25rem;
+  right: 0.25rem;
   cursor: pointer;
+  color: rgb(226, 21, 62);
 }
 
-.card i:hover {
-  color: var(--highlight);
+.remove:hover {
+  filter: brightness(95%);
 }
 
 #chat {
-  width: calc(34% - 0.5rem);
+  width: calc(100% - 3rem);
   height: 30rem;
   background: var(--light);
   margin-left: 1rem;
   padding: 1rem;
+  grid-area: chat;
 }
 
 #messages {

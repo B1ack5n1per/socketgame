@@ -11,21 +11,51 @@ function Room (owner, name, topic) {
 let socket;
 module.exports = (app, db, io) => {
   io.on('connection', (ioSocket) => {
-    console.log('Socket Connected');
     socket = ioSocket;
     socket.on('message', (data) => {
-      io.emit('message', data);
-      db.collection('rooms').updateOne({ roomId: data.room }, { $push: { messages: { user: data.user, msg: data.msg }} });
-    });
-    socket.on('card', (data) => {
-      db.collection('rooms').updateOne({ roomId: data.room }, { $push: { cards: { sideA: data.sideA, sideB: data.sideB } } }, (err, result) => {
+      db.collection('rooms').updateOne({ roomId: data.room }, { $push: { messages: { user: data.user, msg: data.msg }} }, (err, result) => {
         if (err) {
           throw err;
         } else {
-          console.log(data);
-          io.emit('card', data);
+          io.emit('message', data);
+        };
+      });
+    });
+    socket.on('card', (data) => {
+      db.collection('rooms').findOne({ roomId: data.room }, (err, results) => {
+        let cards = results.cards;
+        let card = {
+          sideA: data.sideA,
+          sideB: data.sideB,
+        };
+        let newCard = true;
+        for (i = 0; i < cards.length; i++) {
+          if (card.sideA == cards[i].sideA && card.sideB == cards[i].sideB) {
+            newCard = false;
+          };
         }
-      } );
+          if (newCard) {
+            db.collection('rooms').updateOne({ roomId: data.room }, { $push: { cards: card } }, (err, result) => {
+              if (err) {
+                throw err;
+              } else {
+                console.log(data);
+                io.emit('card', data);
+              };
+            });
+          } else {
+            io.emit('error', { room: data.room, error: 'Card Already exists' })
+          };
+        });
+      });
+    socket.on('removeCard', (data) => {
+      db.collection('rooms').updateOne({ roomId: data.room }, { $pull: { cards: data.card } }, (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          io.emit('removeCard', data);
+        };
+      });
     });
   });
   app.get('/', (req, res) => {
