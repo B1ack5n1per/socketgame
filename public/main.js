@@ -168,7 +168,10 @@ $(document).ready(() => {
         rounds: $('#rounds').val(),
       },
     })
-  })
+  });
+  $('#start').on('click', () => {
+    socket.emit('start', { room: roomNum });
+  });
 
   window.onbeforeunload = function () {
     $.ajax({
@@ -249,5 +252,11 @@ $(document).ready(() => {
       $('#time').val(data.settings.time);
       $('#rounds').val(data.settings.rounds);
     }
+  });
+  socket.on('start', (data) => {
+    if (data.room == roomNum) {
+      //start game
+      console.log('start');
+    };
   });
 });

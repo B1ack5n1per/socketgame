@@ -64,7 +64,10 @@ module.exports = (app, db, io) => {
       db.collection('rooms').updateOne({ roomId: data.room }, { $set: { settings: data.settings } }, (err, result) => {
         io.emit('change settings', data);
       })
-    })
+    });
+    socket.on('start', (data) => {
+      io.emit('start', data);
+    });
   });
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../pages/home.html'));

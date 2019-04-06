@@ -133,6 +133,7 @@ header i:hover {
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 1fr 1fr;
   grid-template-areas: "settings chat" "cards chat";
+  grid-gap: 1rem;
 }
 
 /* settings */
@@ -155,7 +156,7 @@ header i:hover {
   height: 3rem;
   font-size: 2rem;
   width: 5rem;
-  text-align: right;
+  text-align: center;
   padding-right: 1rem;
 }
 
@@ -218,7 +219,6 @@ header i:hover {
 }
 
 .card-container {
-    margin-top: 1rem;
     background: var(--light);
     height: auto;
     width: auto;
@@ -232,21 +232,37 @@ header i:hover {
   grid-area: cards;
 }
 
-@media (max-width: 1615px) {
+@media (max-width: 1550px) {
   .cards {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 1275px) {
+@media (max-width: 1250px) {
   .cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 890px) {
+@media (max-width: 980px) {
+  #chat {
+    display: none;
+  }
+
   .cards {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+
+  #game-stuff {
+    grid-template-columns: 1fr;
+    grid-template-areas: "settings" "cards";
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -258,6 +274,7 @@ header i:hover {
   width: 15rem;
   height: 7rem;
   justify-content: flex-end;
+  justify-self: center;
 }
 
 .card textarea {
@@ -296,12 +313,13 @@ header i:hover {
 }
 
 #chat {
-  width: calc(100% - 3rem);
+  width: calc(100% - 2rem);
   height: calc(100% - 2rem;);
   background: var(--light);
-  margin-left: 1rem;
   padding: 1rem;
   grid-area: chat;
+  overflow: hidden;
+  min-width: 17rem;
 }
 
 #messages {
@@ -312,6 +330,7 @@ header i:hover {
   overflow-y: scroll;
   list-style: none;
   padding: 0;
+  overflow: hidden;
 }
 
 #chat-title {
