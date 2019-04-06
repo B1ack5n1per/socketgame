@@ -136,7 +136,7 @@ $(document).ready(() => {
       room: roomNum,
     });
     $('.popup').trigger('click');
-  })
+  });
   $('#message').on('keypress', (event) => {
     if (event.keyCode === 13) {
       $('#send').trigger('click');
@@ -256,7 +256,6 @@ $(document).ready(() => {
   socket.on('start', (data) => {
     if (data.room == roomNum) {
       //start game
-      console.log('start');
     };
   });
 });
