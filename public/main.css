@@ -44,6 +44,8 @@ header i:hover {
   background: rgba(0, 0, 0, 0.97);
 }
 
+/* Game-stuff */
+
 .card-setup {
   position: absolute;
   top: 12.5%;
@@ -245,7 +247,7 @@ header i:hover {
 }
 
 @media (max-width: 980px) {
-  #chat {
+  #game-stuff #chat {
     display: none;
   }
 
@@ -312,9 +314,9 @@ header i:hover {
   filter: brightness(95%);
 }
 
-#chat {
+#game-stuff #chat {
   width: calc(100% - 2rem);
-  height: calc(100% - 2rem;);
+  height: calc(100% - 2rem);
   background: var(--light);
   padding: 1rem;
   grid-area: chat;
@@ -387,4 +389,58 @@ header i:hover {
 
 .message:nth-child(odd) {
   background: var(--primary);
+}
+
+
+/* Game */
+
+#game-container {
+  display: none;
+  position: absolute;
+  top: 7rem;
+  left: 1rem;
+  width: calc(100% - 2rem);
+  height: calc(100% - 8rem);
+  grid-template-columns: 3fr 1fr;
+  grid-gap: 1rem;
+}
+
+#game {
+  background: var(--light);
+}
+
+#game-container #chat {
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  background: var(--light);
+  padding: 1rem;
+  overflow: hidden;
+  min-width: 17rem;
+}
+
+#input {
+  display: block;
+}
+
+@keyframes shake {
+  33% {
+    transform: translate(10px, 0px);
+  }
+
+  67% {
+    transform: translate(-20px, 0px);
+  }
+
+  100% {
+    transform: translate(10px, 0px);
+  }
+}
+
+@media (max-width: 1000px) {
+  #game-container #chat {
+    display: none;
+  }
+  #game-container {
+    grid-template-columns: 1fr;
+  }
 }

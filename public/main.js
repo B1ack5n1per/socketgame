@@ -3,6 +3,11 @@ const username = localStorage.getItem('username');
 let rooms;
 let roomDetails;
 let socket = io();
+let curCard = {
+  sideA: undefined,
+  sideB: undefined,
+};
+let order;
 
 function makePlayer(name) {
   return '<li class="player">' + name + '</li>';
@@ -16,7 +21,7 @@ function removeElement(arr, query) {
   };
   return temp;
 };
-function MakeCard (word, meaning) {
+function MakeCard(word, meaning) {
   this.word = word;
   this.meaning = meaning;
 }
@@ -32,6 +37,41 @@ function addMessages() {
     let message = roomDetails.messages[i];
     $('#messages').append(`<li class="message"><span class="bold">${message.user}: </span>${message.msg}`);
   }
+}
+function shake(id) {
+  $(id).css('animation', 'shake 0.5s');
+  window.setTimeout(() => {
+    $(id).css('animation', '')
+  }, 600);
+}
+function setCard(card) {
+  curCard.sideA = card.sideA;
+  curCard.sideB = card.sideB;
+}
+function setOrder() {
+  let indexes = [];
+  for (i = 0; i < roomDetails.cards.length; i++) {
+    let ranNum = Math.floor(Math.random() * roomDetails.cards.length);
+    let newNum = false;
+    while (!newNum) {
+      let broken = false;
+      for (ii = 0; ii < indexes.length; ii++) {
+        if (ranNum === indexes[ii]) {
+          ranNum = Math.floor(Math.random() * roomDetails.cards.length);
+          broken = true;
+          break;
+        }
+      }
+
+      newNum = true;
+      if (broken) {
+        newNum = false;
+      } else {
+        indexes.push(ranNum);
+      }
+    }
+  }
+  order = indexes;
 }
 
 $(document).ready(() => {
@@ -172,6 +212,8 @@ $(document).ready(() => {
   $('#start').on('click', () => {
     socket.emit('start', { room: roomNum });
   });
+  $('#input').on('change', () => {
+  });
 
   window.onbeforeunload = function () {
     $.ajax({
@@ -255,7 +297,16 @@ $(document).ready(() => {
   });
   socket.on('start', (data) => {
     if (data.room == roomNum) {
-      //start game
+      $('#game-stuff').slideUp('fast', () => {
+        window.setTimeout(() => {
+          let chat = $('#chat').detach();
+          chat.appendTo('#game-container');
+          $('#game-container').slideDown('fast');
+          $('#game-container').css('display', 'grid');
+        }, 500);
+      });
+      setOrder();
+      alert(order);
     };
   });
 });
