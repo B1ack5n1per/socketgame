@@ -8,10 +8,14 @@ let curCard = {
   sideB: undefined,
 };
 let order;
+let curTime = 0;
+let curIndex;
+let curSide;
+let timer;
 
 function makePlayer(name) {
   return '<li class="player">' + name + '</li>';
-}
+};
 function removeElement(arr, query) {
   let temp = []
   for (i = 0; i < arr.length; i++) {
@@ -24,55 +28,82 @@ function removeElement(arr, query) {
 function MakeCard(word, meaning) {
   this.word = word;
   this.meaning = meaning;
-}
+};
 function addPlayers(array) {
   $('.player').remove();
   for (i = 0; i < array.length; i++) {
     $('#players').append(makePlayer(array[i].name));
   }
-}
+};
 function addMessages() {
   $('.message').remove();
   for (i = 0; i < roomDetails.messages.length; i++) {
     let message = roomDetails.messages[i];
     $('#messages').append(`<li class="message"><span class="bold">${message.user}: </span>${message.msg}`);
   }
-}
+};
 function shake(id) {
   $(id).css('animation', 'shake 0.5s');
   window.setTimeout(() => {
     $(id).css('animation', '')
   }, 600);
-}
+};
 function setCard(card) {
   curCard.sideA = card.sideA;
   curCard.sideB = card.sideB;
-}
-function setOrder() {
-  let indexes = [];
-  for (i = 0; i < roomDetails.cards.length; i++) {
-    let ranNum = Math.floor(Math.random() * roomDetails.cards.length);
-    let newNum = false;
-    while (!newNum) {
-      let broken = false;
-      for (ii = 0; ii < indexes.length; ii++) {
-        if (ranNum === indexes[ii]) {
-          ranNum = Math.floor(Math.random() * roomDetails.cards.length);
-          broken = true;
-          break;
-        }
-      }
-
-      newNum = true;
-      if (broken) {
-        newNum = false;
+};
+function countdown(call) {
+  $('#timer').css('font-size', '10rem');
+  $('#timer').toggleClass('center');
+  for (let i = 1; i <= 5; i++) {
+    window.setTimeout(() => {
+      if (i === 5) {
+        $('#timer').html('0');
+        $('#timer').css('font-size', '2rem');
+        $('#timer').toggleClass('center');
+        call()
+      } else if (i === 4) {
+        $('#timer').html('GO!');
       } else {
-        indexes.push(ranNum);
+        $('#timer').html(4 - i);
       }
-    }
+    }, 750 * i);
+  };
+};
+function endRound() {
+  $('#cur-card').html('');
+  curIndex++;
+  clearInterval(timer);
+  curTime = 0;
+  curSide = Math.floor(Math.random() * 2);
+  if (curIndex === Number($('#rounds').val())) {
+    location.reload();
+  } else {
+    start();
   }
-  order = indexes;
-}
+};
+
+function start() {
+  countdown(() => {
+    let time = Number($('#time').val());
+    $('#input').css('display', 'block');
+    $('#input').focus();
+    if (curSide === 0) {
+      $('#cur-card').html(roomDetails.cards[curIndex].sideB);
+    } else {
+      $('#cur-card').html(roomDetails.cards[curIndex].sideA);
+    }
+    timer = setInterval(() => {
+      curTime++;
+      $('#timer').html(curTime);
+      if (curTime === time) {
+        clearInterval(timer);
+        endRound();
+      };
+    }, 1250);
+  });
+};
+
 
 $(document).ready(() => {
   $.ajax({
@@ -213,6 +244,36 @@ $(document).ready(() => {
     socket.emit('start', { room: roomNum });
   });
   $('#input').on('change', () => {
+    let guess = $('#input').val();
+    if (curSide === 0) {
+      if (guess === roomDetails.cards[curIndex].sideA) {
+      socket.emit('guess', {
+        room: roomNum,
+        user: username,
+      });
+        alert('correct');
+      } else {
+        shake('#input');
+      }
+      $('#input').val('');
+    } else {
+      if (guess === roomDetails.cards[curIndex].sideB) {
+      socket.emit('guess', {
+        room: roomNum,
+        user: username,
+      });
+        alert('correct');
+      } else {
+        shake('#input');
+      }
+      $('#input').val('');
+    }
+
+  });
+  $('#input').on('keydown', (event) => {
+    if (event.keyCode === 13) {
+      $('#input').trigger('change');
+    }
   });
 
   window.onbeforeunload = function () {
@@ -297,6 +358,9 @@ $(document).ready(() => {
   });
   socket.on('start', (data) => {
     if (data.room == roomNum) {
+      if (Number($('#rounds').val()) > roomDetails.cards.length) {
+        $('#rounds').val(roomDetails.cards.length);
+      };
       $('#game-stuff').slideUp('fast', () => {
         window.setTimeout(() => {
           let chat = $('#chat').detach();
@@ -305,8 +369,22 @@ $(document).ready(() => {
           $('#game-container').css('display', 'grid');
         }, 500);
       });
-      setOrder();
-      alert(order);
+      roomDetails.cards = data.cards;
+      curIndex = 0;
+      curSide = Math.floor(Math.random() * 2);
+      start();
     };
+  });
+  socket.on('guess', (data) => {
+    if (roomNum === data.room) {
+      roomDetails = data.details;
+      if (username === data.player) {
+        let place = roomDetails.ranking.length;
+        alert('you placed: ' + place);
+      }
+    }
+  });
+  socket.on('next round', (data) => {
+    endRound();
   });
 });

@@ -418,8 +418,41 @@ header i:hover {
   min-width: 17rem;
 }
 
+#card-container {
+  height: 50%;
+  width: calc(100% - 2rem);
+  margin: 1rem;
+}
+
 #input {
-  display: block;
+  display: none;
+  margin: auto;
+  border: none;
+  width: 50%;
+  height: 3rem;
+  font-size: 2rem;
+  text-align: center;
+  border-bottom: 2px var(--dark) solid;
+}
+
+#input:focus {
+  outline: none;
+}
+
+#timer {
+  margin: 1rem;
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+#cur-card {
+  font-size: 7.5rem;
+  margin: 1rem;
+  width: calc(100% - 2rem);
+  text-align: center;
 }
 
 @keyframes shake {

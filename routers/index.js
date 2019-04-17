@@ -10,10 +10,28 @@ function Room (owner, name, topic) {
   this.settings = {
     time: 30,
     rounds: 1,
-  }
+  };
+  this.rankings = [];
 }
 let socket;
+
 module.exports = (app, db, io) => {
+  function clear(data) {
+    db.collection('rooms').updateOne({ roomId: data.room }, { $set: { ranking: [] } }, (err, result) => {
+      if (err) {
+        throw err;
+      } else {
+        db.collection('rooms').findOne({ roomId: data.room }, (error, res) => {
+          io.emit('guess', {
+            player: undefined,
+            room: data.room,
+            details: res,
+          });
+        });
+      };
+    });
+  }
+
   io.on('connection', (ioSocket) => {
     socket = ioSocket;
     socket.on('message', (data) => {
@@ -66,7 +84,56 @@ module.exports = (app, db, io) => {
       })
     });
     socket.on('start', (data) => {
-      io.emit('start', data);
+      db.collection('rooms').findOne({ roomId: data.room }, (err, results) => {
+        let cards = results.cards;
+        let indexes = [];
+        for (i = 0; i < cards.length; i++) {
+            let ranNum = Math.floor(Math.random() * cards.length);
+            let newNum = false;
+            while (!newNum) {
+              let broken = false;
+              for (ii = 0; ii < indexes.length; ii++) {
+                if (ranNum === indexes[ii]) {
+                  ranNum = Math.floor(Math.random() * cards.length);
+                  broken = true;
+                  break;
+                }
+              }
+              newNum = true;
+              if (broken) {
+                newNum = false;
+              } else {
+                indexes.push(ranNum);
+              }
+            }
+          }
+        let cardsReordered = [];
+        for (i = 0; i < indexes.length; i++) {
+          cardsReordered.push(cards[indexes[i]]);
+        }
+        db.collection('rooms').updateOne({ roomId: data.room }, { $set: { cards: cardsReordered }}, (err, result) => {
+          data.cards = cardsReordered;
+          io.emit('start', data);
+        });
+      });
+    });
+    socket.on('guess', (data) => {
+      db.collection('rooms').updateOne({ roomId: data.room }, { $push: { ranking: data.user } }, (err, result) => {
+        db.collection('rooms').findOne({ roomId: data.room }, (err, res) => {
+          if (res.ranking.length >= res.players.length) {
+            clear(data);
+            io.emit('next round', data);
+          }
+          io.emit('guess', {
+            player: data.user,
+            room: data.room,
+            details: res,
+          });
+        });
+      });
+    });
+    socket.on('clear ranks', (data) => {
+      clear(data);
     });
   });
   app.get('/', (req, res) => {
